@@ -1,0 +1,34 @@
+name: .NET CI for Cybersecurity Chatbot
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x' # or use the version of .NET your project targets
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build the project
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Check format (optional)
+      run: dotnet format --verify-no-changes
+
+    - name: Run tests (if applicable)
+      run: dotnet test --no-build --verbosity normal
+      continue-on-error: true
